@@ -1,0 +1,16 @@
+Define Requirements:
+
+Use HTML, CSS, and JavaScript for  structure.
+
+Html-Admin Dashboard, Live Camera Feed, and Notifications.
+
+Notification/alert system when unusual activity is detected (e.g., crowd gathering or intruder detection).
+Admin interface to monitor alerts.
+
+Basic goal: Live feed and manual notifications.
+Intermediate: Real-time notifications based on event detection.
+
+Implement basic JavaScript for:
+
+Showing notifications when an event is triggered.
+Simulate events by showing notifications every few seconds
