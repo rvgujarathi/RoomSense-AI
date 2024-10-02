@@ -3,51 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time People Counter</title>
+    <title>RoomSense AI</title>
     <style>
         body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
         }
         h1 {
-            color: #333;
+            margin: 20px;
         }
-        #video-feed {
-            width: 80%;
-            max-width: 600px;
-            border: 2px solid #333;
-            margin-bottom: 20px;
+        #video {
+            max-width: 100%;
+            border: 1px solid #000;
         }
-        .count {
+        #status {
+            margin: 20px;
+            font-size: 18px;
+            color: green;
+        }
+        .blocked {
+            color: red;
+        }
+        #people-count {
+            margin: 20px;
             font-size: 24px;
-            margin-top: 20px;
-            color: #ff0000;
         }
     </style>
-</head>
-<body>
-    <h1>Real-Time People Counter</h1>
-    
-    <!-- Display the video stream -->
-    <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Video Feed">
-
-    <!-- Display the people count -->
-    <div class="count">People Detected: <span id="people-count">0</span></div>
-
     <script>
-        // Function to fetch people count every second
-        function fetchPeopleCount() {
+        function updateBlockageStatus() {
+            fetch('/blockage_status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusElement = document.getElementById('status');
+                    if (data.blocked) {
+                        statusElement.textContent = 'Camera Blocked!';
+                        statusElement.classList.add('blocked');
+                    } else {
+                        statusElement.textContent = 'Camera Clear';
+                        statusElement.classList.remove('blocked');
+                    }
+                })
+                .catch(error => console.error('Error fetching blockage status:', error));
+        }
+
+        function updatePeopleCount() {
             fetch('/people_count')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('people-count').innerText = data.count;
+                    document.getElementById('people-count').innerText = 'People Count: ' + data.count;
                 })
                 .catch(error => console.error('Error fetching people count:', error));
         }
 
-        // Fetch people count every second
-        setInterval(fetchPeopleCount, 1000);
+        // Update statuses every 2 seconds
+        setInterval(updateBlockageStatus, 2000);
+        setInterval(updatePeopleCount, 2000);
     </script>
+</head>
+<body>
+    <h1>RoomSense AI</h1>
+    <img id="video" src="{{ url_for('video_feed') }}" alt="Video Feed">
+    <div id="status">Loading...</div>
+    <div id="people-count">People Count: 0</div>
 </body>
 </html>
