@@ -3,69 +3,400 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RoomSense AI</title>
+    <title>YOLO Object Detection</title>
+
+    <!-- Embedded CSS -->
     <style>
+        *:before,
+        *:after {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #151320;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container and Layout */
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 10px 0;
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            z-index: 2;
+          
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        header p {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 94%;
+            width: 0;
+            position: fixed;
+            top: 15px;  /* Adjusted for header */
+            left: 0;
+            background-color: #222;  /* Same as header */
+            color: white;
+            transition: width 0.3s ease;
+            overflow-x: hidden;
+            padding-top: 40px;
+            
+            z-index:1;
+        }
+
+        .sidebar.active {
+            width: 400px;
+        }
+
+        .sidebar h2 {
+            padding-left: 20px;
+            padding-right: 20px;
+            margin-top: 40px;
+        }
+
+        .sidebar .controls, .sidebar .stats {
+            padding-left: 20px;
+            padding-right: 20px;
+            margin-top: 20px;
+        }
+
+        /* Buttons and Stats */
+        .controls .buttons {
             display: flex;
             flex-direction: column;
+            gap: 15px;
+        }
+
+        .controls .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-align: left;
+        }
+
+        .controls .btn:hover {
+            background-color: #45a049;
+        }
+
+        .stats .stat-item {
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .fake-section {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .fake-section h3 {
+            margin-top: 20px;
+        }
+
+        .fake-section .stat-item {
+            background-color: #555;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* Video Container */
+        .main-content {
+            transition: margin-left 0.3s ease;
+            width: 100%;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            font-family: Arial, sans-serif;
+            position: relative;
         }
-        h1 {
-            margin: 20px;
+
+        .main-content.active {
+            margin-left: 300px;
         }
-        #video {
-            max-width: 100%;
-            border: 1px solid #000;
+
+        @keyframes rainbow-border {
+            0% {
+                border-color: red;
+            }
+            14% {
+                border-color: orange;
+            }
+            28% {
+                border-color: yellow;
+            }
+            42% {
+                border-color: green;
+            }
+            57% {
+                border-color: blue;
+            }
+            71% {
+                border-color: indigo;
+            }
+            85% {
+                border-color: violet;
+            }
+            100% {
+                border-color: red;
+            }
         }
-        #status {
-            margin: 20px;
-            font-size: 18px;
-            color: green;
+        @keyframes rainbow-glow {
+            0% {
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            }
+            14% {
+                box-shadow: 0 0 20px rgba(255, 165, 0, 0.7); /* Orange glow */
+            }
+            28% {
+                box-shadow: 0 0 20px rgba(255, 255, 0, 0.7); /* Yellow glow */
+            }
+            42% {
+                box-shadow: 0 0 20px rgba(0, 128, 0, 0.7); /* Green glow */
+            }
+            57% {
+                box-shadow: 0 0 20px rgba(0, 0, 255, 0.7); /* Blue glow */
+            }
+            71% {
+                box-shadow: 0 0 20px rgba(75, 0, 130, 0.7); /* Indigo glow */
+            }
+            85% {
+                box-shadow: 0 0 20px rgba(238, 130, 238, 0.7); /* Violet glow */
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.7); /* Red glow */
+            }
         }
-        .blocked {
-            color: red;
+        
+        
+        .video-container {
+            position: relative;
+            width: 900px;
+            height: 506px;
+            display: none;  /* Hidden initially for loader effect */
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 4px solid red;  /* Initial border color */
+            animation: rainbow-border 3s linear infinite;  /* Apply the rainbow animation */
         }
-        #people-count {
-            margin: 20px;
-            font-size: 24px;
+        .video-container {
+            /* ... other styles ... */
+            animation: rainbow-border 3s linear infinite, rainbow-glow 3s linear infinite; /* Apply both animations */
         }
+
+        #video-stream {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 2;
+            border-radius: 15px;
+        }
+
+        /* Loading GIF */
+        .loader-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            overflow: hidden; /* Ensure that any overflow is hidden */
+        }
+        
+        .loader-container img {
+            width: 900px;
+            height: 506px;
+            border-radius: 20px; /* Adjust the value for more or less roundness */
+            overflow: hidden;
+        }
+
+        /* Toggle Menu Button */
+        .toggle-btn {
+            position: fixed;
+            top: 15px;  /* Adjusted for header */
+            left: 20px;
+            font-size: 20px;
+            background-color: #222;  /* Same as header */
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 2;
+        }
+
     </style>
+
+    <!-- Embedded JS -->
     <script>
-        function updateBlockageStatus() {
-            fetch('/blockage_status')
-                .then(response => response.json())
-                .then(data => {
-                    const statusElement = document.getElementById('status');
-                    if (data.blocked) {
-                        statusElement.textContent = 'Camera Blocked!';
-                        statusElement.classList.add('blocked');
-                    } else {
-                        statusElement.textContent = 'Camera Clear';
-                        statusElement.classList.remove('blocked');
-                    }
-                })
-                .catch(error => console.error('Error fetching blockage status:', error));
-        }
+        document.addEventListener("DOMContentLoaded", () => {
+            const peopleCountElem = document.getElementById('count');
+            const crowdStatusElem = document.getElementById('crowd-status');
+            const blockStatusElem = document.getElementById('block-status');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const toggleBtn = document.querySelector('.toggle-btn');
 
-        function updatePeopleCount() {
-            fetch('/people_count')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('people-count').innerText = 'People Count: ' + data.count;
-                })
-                .catch(error => console.error('Error fetching people count:', error));
-        }
+            const captureReferenceBtn = document.getElementById('capture-reference-btn');
+            const checkMissingBtn = document.getElementById('check-missing-btn');
 
-        // Update statuses every 2 seconds
-        setInterval(updateBlockageStatus, 2000);
-        setInterval(updatePeopleCount, 2000);
+            const loaderContainer = document.querySelector('.loader-container');
+            const videoContainer = document.querySelector('.video-container');
+
+            // Sidebar toggle functionality
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                mainContent.classList.toggle('active');
+            });
+
+            // Fetch people count every 5 seconds
+            setInterval(() => {
+                fetch('/people_count')
+                    .then(response => response.json())
+                    .then(data => {
+                        peopleCountElem.textContent = data.count;
+                        crowdStatusElem.textContent = data.crowd_detected ? 'Crowd Detected' : 'No Crowd';
+
+                        crowdStatusElem.classList.toggle('crowd-detected', data.crowd_detected);
+                        crowdStatusElem.classList.toggle('no-crowd', !data.crowd_detected);
+                    });
+            }, 5000);
+
+            // Fetch blockage status every 5 seconds
+            setInterval(() => {
+                fetch('/blockage_status')
+                    .then(response => response.json())
+                    .then(data => {
+                        blockStatusElem.textContent = data.blocked ? 'Blocked' : 'Unblocked';
+                        blockStatusElem.classList.toggle('blocked', data.blocked);
+                        blockStatusElem.classList.toggle('unblocked', !data.blocked);
+                    });
+            }, 1000);
+
+            // Capture reference frame on button click
+            captureReferenceBtn.addEventListener('click', () => {
+                fetch('/capture_reference')
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    });
+            });
+
+            // Check for missing objects
+            checkMissingBtn.addEventListener('click', () => {
+                fetch('/check_missing_objects')
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message || `Missing Objects: ${data.missing_objects}`);
+                    });
+            });
+
+            // Simulate loading video after 3 seconds
+            setTimeout(() => {
+                loaderContainer.style.display = 'none'; // Hide loader
+                videoContainer.style.display = 'block';  // Show video container
+            }, 3000);  // Delay of 3 seconds
+        });
     </script>
 </head>
 <body>
-    <h1>RoomSense AI</h1>
-    <img id="video" src="{{ url_for('video_feed') }}" alt="Video Feed">
-    <div id="status">Loading...</div>
-    <div id="people-count">People Count: 0</div>
+    <!-- Header Section -->
+    <header>
+        
+        <h1>RoomSense AI</h1>
+        <p>Powered by YOLOv8</p>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Controls & Stats</h2>
+
+            <div class="controls">
+                <div class="buttons">
+                    <button id="capture-reference-btn" class="btn">Capture Reference Frame</button>
+                    <button id="check-missing-btn" class="btn">Check Missing Objects</button>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>People Count</h3>
+                    <p id="count">0</p>
+                </div>
+
+                <div class="stat-item">
+                    <h3>Crowd Detection</h3>
+                    <p id="crowd-status">No Crowd</p>
+                </div>
+
+                <div class="stat-item">
+                    <h3>Blockage Status</h3>
+                    <p id="block-status">Unblocked</p>
+                </div>
+            </div>
+            <!-- Fake Features to Fill Sidebar -->
+            <div class="fake-section">
+                <h3>Object History</h3>
+                <div class="stat-item">Object A detected</div>
+                <div class="stat-item">Object B detected</div>
+
+                <h3>Alerts</h3>
+                <div class="stat-item">No alerts</div>
+
+                <h3>Performance</h3>
+                <div class="stat-item">FPS: 30</div>
+            </div>
+        </div>
+
+        <!-- Button to toggle the sidebar -->
+        <button class="toggle-btn">&#9776; Menu</button>
+
+        <!-- Main content for video feed -->
+        <div class="main-content">
+            <!-- Loading GIF -->
+            <div class="loader-container">
+                <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Loading">
+            </div>
+
+            <!-- Video Feed -->
+            <div class="video-container">
+                <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Live Stream">
+            </div>
+        </div>
+    </div>
 </body>
 </html>
