@@ -1,0 +1,37 @@
+RoomSense AI:-
+Is a web application designed for real-time object detection using the YOLOv8 (You Only Look Once) model. This application showcases an interactive interface that allows users to capture reference frames, check for missing objects, and monitor statistics related to crowd detection and blockage status.
+
+Features
+User Interface: A sleek, modern interface with a responsive design that utilizes a gradient background and a sidebar for controls and statistics.
+
+Real-Time Video Stream: Displays a video stream from the user's camera, with a loader to indicate when the video is being prepared.
+
+Dynamic Controls: Buttons to capture reference frames and check for missing objects, along with real-time updates on people count, crowd status, and blockage status.
+
+Animation Effects: Smooth animations and transitions for a visually appealing user experience.
+
+Responsive Design: Optimized for both desktop and mobile views, ensuring accessibility across devices.
+
+Getting Started
+Prerequisites
+A modern web browser (Chrome, Firefox, etc.)
+Basic knowledge of HTML, CSS, and JavaScript
+Installation
+Clone the repository:
+
+bash
+Copy code
+git clone https://github.com/yourusername/RoomSense-AI.git
+cd RoomSense-AI
+Open index.html in your preferred web browser.
+
+Usage
+Click on the "Capture Reference Frame" button to capture a current frame from the video stream.
+Use the "Check Missing Objects" button to analyze the scene and receive updates on detected objects.
+Monitor the People Count, Crowd Status, and Blockage Status on the sidebar for real-time metrics.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Contributing
+Contributions are welcome! Please feel free to submit a pull request or open an issue if you encounter any bugs or have feature requests.

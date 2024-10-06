@@ -1,0 +1,303 @@
+/* Reset and basic setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #000000, #434343);
+    /* Gradient from black to gray */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+/* Header with a sleek gradient and glowing shadow */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 10px 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    text-align: center;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.4s ease;
+}
+
+header:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+header h1 {
+    font-size: 40px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: #ffeb3b;
+    text-shadow: 0 0 8px rgba(255, 235, 59, 0.5);
+}
+
+header p {
+    font-size: 18px;
+    font-weight: 300;
+    color: #f8cdda;
+}
+
+/* Sidebar styling with glow effects */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    transition: width 0.5s ease;
+    padding-top: 100px;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+    z-index: 5;
+    overflow: hidden;
+}
+
+.sidebar.active {
+    width: 400px;
+}
+
+.sidebar h2 {
+    padding: 0 30px;
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #ffeb3b;
+    text-shadow: 0 0 5px rgba(255, 235, 59, 0.8);
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+}
+
+.controls, .stats, .fake-section {
+    padding: 0 30px;
+    margin-bottom: 50px;
+    opacity: 0;
+    /* Initially hidden */
+    animation: slideIn 1s ease forwards;
+}
+
+.controls.active, .stats.active, .fake-section.active {
+    opacity: 1;
+    /* Show when sidebar is active */
+}
+
+.controls .btn {
+    background-color: #f39c12;
+    color: white;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.controls .btn:hover {
+    background-color: #d35400;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-7px);
+    /* Button lift effect on hover */
+}
+
+
+.stat-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: slideIn 1s ease forwards;
+
+}
+
+.fake-section .stat-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    animation: slideIn 1.5s ease forwards;
+    opacity: 0;
+}
+
+/* Main content for video stream, centered and responsive */
+.main-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: margin-left 0.5s ease;
+}
+
+.main-content.active {
+    margin-left: 320px;
+}
+
+/* Video container centered and with effects */
+.video-container {
+    position: relative;
+    display: flow-root;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    max-width: 960px;
+    height: 540px;
+    border-radius: 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: glow-border 3s linear infinite;
+}
+
+#video-stream {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+/* Loader for the video */
+.loader-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loader-container img {
+    width: 960px;
+    height: 540px;
+    border-radius: 20px;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+/* Button to toggle sidebar */
+.toggle-btn {
+    position: fixed;
+    top: 30px;
+    /* Moved further up */
+    left: 20px;
+    background-color: #ffeb3b;
+    color: #333;
+    font-size: 22px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 40%;
+    cursor: pointer;
+    z-index: 200;
+    /* Higher z-index to stay above other elements */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.4s ease, background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background-color: #f39c12;
+}
+
+.toggle-btn.rotate {
+    animation: rotate 0.7s ease forwards;
+    /* Add rotation effect */
+}
+
+/* Footer styles */
+
+/* Footer styles */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
+}
+
+footer a {
+    color: #ffeb3b;
+    /* Default link color */
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+    /* Smooth transition */
+}
+
+footer a:hover {
+    color: #f39c12;
+    /* Change color on hover */
+    text-shadow: 0 0 5px rgba(243, 157, 18, 0.035);
+    /* Optional glow effect */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes glow-border {
+    0% {
+        box-shadow: 0 0 20px #f39c12;
+    }
+
+    50% {
+        box-shadow: 0 0 40px #e74c3c;
+    }
+
+    100% {
+        box-shadow: 0 0 20px #3498db;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(180deg);
+    }
+}

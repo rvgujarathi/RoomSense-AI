@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Object Detection - Enhanced</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>RoomSense AI</h1>
+        <p>Powered by YOLOv8</p>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Controls</h2>
+        <div class="controls">
+            <button class="btn" id="capture-reference-btn">Capture Reference Frame</button>
+            <button class="btn" id="check-missing-btn">Check Missing Objects</button>
+        </div>
+
+        <h2>Stats</h2>
+        <div class="stats">
+          <div class="stat-item">People Count: Loading...</div>
+          <div class="stat-item">Crowd Status: Loading...</div>
+          <div class="stat-item">Blockage Status: Loading...</div>
+      </div>
+      
+
+        <div class="fake-section">
+            <h2>Coming Soon</h2>
+            <div class="stat-item">
+                <p>More features and metrics on the way...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content with Loader and Video -->
+    <div class="main-content">
+        <!-- Loader -->
+        <div class="loader-container">
+            <img src="https://via.placeholder.com/960x540?text=Loading+Video..." alt="Loading video...">
+        </div>
+
+        <!-- Video Stream -->
+        <div class="video-container" style="display: none;">
+            <video id="video-stream" autoplay></video>
+        </div>
+    </div>
+
+    <!-- Button to toggle sidebar -->
+    <button class="toggle-btn">&#9776;</button>
+
+    <!-- Sidebar -->
+<div class="sidebar">
+  <h2>Controls & Stats</h2>
+  <div class="controls">
+      <button class="btn" id="capture-reference-btn">Capture Reference Frame</button>
+      <button class="btn" id="check-missing-btn">Check Missing Objects</button>
+  </div>
+
+  <h2>People Count</h2>
+  <div class="stats">
+      <div class="stat-item">
+          <p>People Count: <span id="count">0</span></p>
+      </div>
+      <div class="stat-item">
+          <p>Crowd Detection: <span id="crowd-status">No Crowd</span></p>
+      </div>
+      <div class="stat-item">
+          <p>Blockage Status: <span id="block-status">Unblocked</span></p>
+      </div>
+  </div>
+
+  <h2>Object History</h2>
+  <div class="fake-section">
+      <div class="stat-item">
+          <p>Object A detected</p>
+      </div>
+      <div class="stat-item">
+          <p>Object B detected</p>
+      </div>
+  </div>
+
+  <h2>Alerts</h2>
+  <div class="fake-section">
+      <div class="stat-item"> 
+          <p>No alerts at the moment.</p>
+      </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2024 YOLO Object Detection. All rights reserved.</p>
+  <p>
+      <a href="#">Privacy Policy</a> | 
+      <a href="#">Terms of Service</a> | 
+      <a href="#">Contact Us</a>
+  </p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
